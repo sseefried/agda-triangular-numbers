@@ -2,7 +2,6 @@
 
 module Triangular where
 
-
 open import Data.Nat
 open import Data.Nat.Properties
 open import Data.Nat.DivMod
@@ -59,5 +58,21 @@ closedForm (suc m) = begin
   (suc m * (2 + m)) / 2                  ≡⟨ cong (λ x → (suc m * x) / 2) (+-comm 2 m) ⟩
   (suc m * (m + 2)) / 2                  ≡⟨ cong (λ x → (suc m *  x) / 2) (n+2≡suc_n+1 {m}) ⟩
   (suc m * (suc m + 1)) / 2              ∎
+  where
+    open ≡-Reasoning
+
+-- An attempt to see if the proof is easier when you don't use _/_
+closedForm2 : ∀ n → 2 * triangular n ≡ n * (n + 1)
+closedForm2 zero = refl
+closedForm2 (suc m) = begin
+  2 * triangular (suc m)                 ≡⟨⟩
+  2 * (suc m + triangular m)             ≡⟨ *-distribˡ-+ 2 (suc m) _ ⟩
+  2 * suc m + 2 * triangular m           ≡⟨ cong (λ x → 2 * suc m + x) (closedForm2 m)  ⟩
+  2 * suc m + m * (m + 1)                ≡⟨ cong (λ x → 2 * suc m + m * x) n+1≡suc_n ⟩
+  2 * suc m + m * suc m                  ≡⟨ sym (*-distribʳ-+ (suc m) 2 m)  ⟩
+  (2 + m) * suc m                        ≡⟨  *-comm (2 + m) (suc m)  ⟩
+  suc m * (2 + m)                        ≡⟨ cong (λ x → suc m * x) (+-comm 2 m) ⟩
+  suc m * (m + 2)                        ≡⟨ cong (λ x → suc m * x) n+2≡suc_n+1 ⟩
+  suc m * (suc m + 1)                    ∎
   where
     open ≡-Reasoning
