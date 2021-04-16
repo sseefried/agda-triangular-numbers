@@ -15,18 +15,18 @@ triangular (suc n) = suc n + triangular n
 n+1≡suc_n : ∀ {n : ℕ} → n + 1 ≡ suc n 
 n+1≡suc_n {zero} = refl
 n+1≡suc_n {suc n} = begin
-  suc n + 1   ≡⟨⟩
-  suc (n + 1) ≡⟨ cong suc n+1≡suc_n ⟩
-  suc (suc n) ∎
+  suc n + 1            ≡⟨⟩
+  suc (n + 1)          ≡⟨ cong suc n+1≡suc_n ⟩
+  suc (suc n)          ∎
   where
     open ≡-Reasoning
 
 n+2≡suc_n+1 : ∀ {n : ℕ} → n + 2 ≡ suc n + 1
 n+2≡suc_n+1 {zero}  = refl
 n+2≡suc_n+1 {suc n} = begin
-  suc n + 2       ≡⟨⟩
-  suc (n + 2) ≡⟨ cong suc (n+2≡suc_n+1) ⟩
-  suc (suc n) + 1 ∎
+  suc n + 2             ≡⟨⟩
+  suc (n + 2)           ≡⟨ cong suc (n+2≡suc_n+1) ⟩
+  suc (suc n) + 1       ∎
   where
     open ≡-Reasoning
 
@@ -70,7 +70,7 @@ closedForm2 (suc m) = begin
   2 * suc m + 2 * triangular m           ≡⟨ cong (λ x → 2 * suc m + x) (closedForm2 m)  ⟩
   2 * suc m + m * (m + 1)                ≡⟨ cong (λ x → 2 * suc m + m * x) n+1≡suc_n ⟩
   2 * suc m + m * suc m                  ≡⟨ sym (*-distribʳ-+ (suc m) 2 m)  ⟩
-  (2 + m) * suc m                        ≡⟨  *-comm (2 + m) (suc m)  ⟩
+  (2 + m) * suc m                        ≡⟨ *-comm (2 + m) (suc m)  ⟩
   suc m * (2 + m)                        ≡⟨ cong (λ x → suc m * x) (+-comm 2 m) ⟩
   suc m * (m + 2)                        ≡⟨ cong (λ x → suc m * x) n+2≡suc_n+1 ⟩
   suc m * (suc m + 1)                    ∎
