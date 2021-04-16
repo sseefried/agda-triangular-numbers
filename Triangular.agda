@@ -4,6 +4,7 @@ module Triangular where
 
 open import Data.Nat
 open import Data.Nat.Properties
+open import Data.Nat.Solver
 open import Data.Nat.DivMod
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym; module ≡-Reasoning)
 
@@ -76,3 +77,19 @@ closedForm2 (suc m) = begin
   suc m * (suc m + 1)                    ∎
   where
     open ≡-Reasoning
+
+
+-- An attempt to see if the proof is easier when you don't use _/_
+closedForm2' : ∀ n → 2 * triangular n ≡ n * (n + 1)
+closedForm2' zero = refl
+closedForm2' (suc m) = begin
+  2 * triangular (suc m)                 ≡⟨⟩
+  2 * (suc m + triangular m)             ≡⟨ *-distribˡ-+ 2 (suc m) _ ⟩
+  2 * suc m + 2 * triangular m           ≡⟨ cong (λ x → 2 * suc m + x) (closedForm2' m)  ⟩
+  2 * suc m + m * (m + 1)                ≡⟨ cong (λ x → 2 * x + m * (m + 1)) (sym n+1≡suc_n) ⟩
+  2 * (m + 1) + m * (m + 1)              ≡⟨ solve 1 (λ m → con 2 :* (m :+ con 1) :+ m :* (m :+ con 1) := (m :+ con 1) :* ((m :+ con 1) :+ con 1)) refl m  ⟩
+  (m + 1) * ((m + 1) + 1)                ≡⟨ cong (λ x → x * (x + 1)) (n+1≡suc_n {m}) ⟩
+  suc m * (suc m + 1)                    ∎
+  where
+    open ≡-Reasoning
+    open +-*-Solver
