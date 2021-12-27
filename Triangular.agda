@@ -13,7 +13,7 @@ triangular : ℕ → ℕ
 triangular zero = zero
 triangular (suc n) = suc n + triangular n
 
-n+1≡suc_n : ∀ {n : ℕ} → n + 1 ≡ suc n 
+n+1≡suc_n : ∀ {n : ℕ} → n + 1 ≡ suc n
 n+1≡suc_n {zero} = refl
 n+1≡suc_n {suc n} = begin
   suc n + 1            ≡⟨⟩
@@ -79,7 +79,7 @@ closedForm2 (suc m) = begin
     open ≡-Reasoning
 
 
--- An attempt to see if the proof is easier when you don't use _/_
+-- An even shorter proof using Data.Nat.Solver
 closedForm2' : ∀ n → 2 * triangular n ≡ n * (n + 1)
 closedForm2' zero = refl
 closedForm2' (suc m) = begin
@@ -87,7 +87,7 @@ closedForm2' (suc m) = begin
   2 * (suc m + triangular m)             ≡⟨ *-distribˡ-+ 2 (suc m) _ ⟩
   2 * suc m + 2 * triangular m           ≡⟨ cong (λ x → 2 * suc m + x) (closedForm2' m)  ⟩
   2 * suc m + m * (m + 1)                ≡⟨ cong (λ x → 2 * x + m * (m + 1)) (sym n+1≡suc_n) ⟩
-  2 * (m + 1) + m * (m + 1)              ≡⟨ solve 1 (λ m → con 2 :* (m :+ con 1) :+ m :* (m :+ con 1) := (m :+ con 1) :* ((m :+ con 1) :+ con 1)) refl m  ⟩
+  2 * (m + 1) + m * (m + 1)              ≡⟨ solve 1 (λ m → con 2 :* (m :+ con 1) :+ m :* (m :+ con 1) := (m :+ con 1) :* ((m :+ con 1) :+ con 1)) refl m ⟩
   (m + 1) * ((m + 1) + 1)                ≡⟨ cong (λ x → x * (x + 1)) (n+1≡suc_n {m}) ⟩
   suc m * (suc m + 1)                    ∎
   where
